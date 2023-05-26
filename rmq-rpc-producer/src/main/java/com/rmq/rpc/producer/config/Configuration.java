@@ -1,11 +1,12 @@
 package com.rmq.rpc.producer.config;
 
 
-import com.rmq.rpc.producer.annotations.RmqServer;
+import com.rmq.rpc.common.annotations.RmqServer;
+import com.rmq.rpc.common.mq.Encoder;
+import com.rmq.rpc.common.mq.Parser;
+import com.rmq.rpc.common.utils.AnnotationUtils;
 import com.rmq.rpc.producer.client.RmqClient;
 import com.rmq.rpc.producer.exception.RmqException;
-import com.rmq.rpc.producer.mq.Encoder;
-import com.rmq.rpc.producer.mq.Parser;
 import com.rmq.rpc.producer.proxy.ProxyBean;
 import org.apache.commons.lang.StringUtils;
 
@@ -45,7 +46,7 @@ public class Configuration {
     /**
      * rmq配置类
      */
-    RmqConfig rmqConfig;
+    RmqProducerConfig rmqProducerConfig;
     /**
      * mq客户端
      */
@@ -95,7 +96,7 @@ public class Configuration {
      */
     public void registerBean(Class<?> clazz){
         //先获取注解
-        RmqServer annotation = clazz.getAnnotation(RmqServer.class);
+        RmqServer annotation = AnnotationUtils.findAnnotation(clazz,RmqServer.class);
         String name=null;
         if (annotation!=null){
            name =  annotation.serviceName();
@@ -135,12 +136,12 @@ public class Configuration {
 
     }
 
-    public RmqConfig getRmqConfig() {
-        return rmqConfig;
+    public RmqProducerConfig getRmqConfig() {
+        return rmqProducerConfig;
     }
 
-    public void setRmqConfig(RmqConfig rmqConfig) {
-        this.rmqConfig = rmqConfig;
+    public void setRmqConfig(RmqProducerConfig rmqProducerConfig) {
+        this.rmqProducerConfig = rmqProducerConfig;
     }
 
     public RmqClient getRmqClient() {

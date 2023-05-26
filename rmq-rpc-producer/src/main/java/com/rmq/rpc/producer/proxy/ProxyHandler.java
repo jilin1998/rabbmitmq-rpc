@@ -1,12 +1,10 @@
 package com.rmq.rpc.producer.proxy;
 
+import com.rmq.rpc.common.mq.Encoder;
+import com.rmq.rpc.common.mq.Parser;
+import com.rmq.rpc.common.mq.json.Param;
 import com.rmq.rpc.producer.client.RmqClient;
 import com.rmq.rpc.producer.config.Configuration;
-import com.rmq.rpc.producer.mq.EncodeFactorySelector;
-import com.rmq.rpc.producer.mq.Encoder;
-import com.rmq.rpc.producer.mq.ParseFactorySelector;
-import com.rmq.rpc.producer.mq.Parser;
-import com.rmq.rpc.producer.mq.json.Param;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

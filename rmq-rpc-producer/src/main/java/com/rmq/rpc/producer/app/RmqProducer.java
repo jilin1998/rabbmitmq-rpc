@@ -1,24 +1,19 @@
 package com.rmq.rpc.producer.app;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.ClassScaner;
-import com.rmq.rpc.producer.annotations.RmqServer;
+
+import com.rmq.rpc.common.annotations.RmqServer;
+import com.rmq.rpc.common.mq.EncodeFactorySelector;
+import com.rmq.rpc.common.mq.ParseFactorySelector;
 import com.rmq.rpc.producer.client.RmqClient;
 import com.rmq.rpc.producer.config.Configuration;
-import com.rmq.rpc.producer.config.RmqConfig;
+import com.rmq.rpc.producer.config.RmqProducerConfig;
 import com.rmq.rpc.producer.exception.RmqException;
 import com.rmq.rpc.producer.factory.ClientFactory;
 import com.rmq.rpc.producer.factory.ProxyFactory;
-import com.rmq.rpc.producer.mq.EncodeFactorySelector;
-import com.rmq.rpc.producer.mq.ParseFactorySelector;
-import com.rmq.rpc.producer.mq.enums.EncodeTypeEnum;
-import com.rmq.rpc.producer.proxy.ProxyBean;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
@@ -36,9 +31,9 @@ public class RmqProducer {
     private final Configuration configuration;
 
 
-    public RmqProducer(Configuration configuration,RmqConfig rmqConfig,String packages) {
+    public RmqProducer(Configuration configuration, RmqProducerConfig rmqProducerConfig, String packages) {
         this.configuration = configuration;
-        configuration.setRmqConfig(rmqConfig);
+        configuration.setRmqConfig(rmqProducerConfig);
         //注册类
         this.registerBeans(packages);
     }
@@ -47,21 +42,21 @@ public class RmqProducer {
      * 启动时注册，可以不需要使用注解
      * @param classes
      */
-    public RmqProducer(Configuration configuration,RmqConfig rmqConfig,Class<?>... classes){
+    public RmqProducer(Configuration configuration, RmqProducerConfig rmqProducerConfig, Class<?>... classes){
         this.configuration = configuration;
-        configuration.setRmqConfig(rmqConfig);
+        configuration.setRmqConfig(rmqProducerConfig);
         //注册类
         configuration.registerBeans(classes);
     }
     private void checkConfig(){
-        RmqConfig rmqConfig = configuration.getRmqConfig();
-        if (StringUtils.isBlank(rmqConfig.getClusterName())){
+        RmqProducerConfig rmqProducerConfig = configuration.getRmqConfig();
+        if (StringUtils.isBlank(rmqProducerConfig.getClusterName())){
             throw new RmqException("clusterName is null");
         }
-        if (StringUtils.isBlank(rmqConfig.getAppId())){
+        if (StringUtils.isBlank(rmqProducerConfig.getAppId())){
             throw new RmqException("appId is null");
         }
-        if (rmqConfig.getEncodeType()==null){
+        if (rmqProducerConfig.getEncodeType()==null){
             throw new RmqException("encodingType is null or illegal");
         }
     }

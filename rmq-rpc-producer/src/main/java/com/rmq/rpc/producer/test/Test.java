@@ -1,6 +1,6 @@
 package com.rmq.rpc.producer.test;
 
-import com.rmq.rpc.producer.annotations.RmqServer;
+import com.rmq.rpc.common.annotations.RmqServer;
 
 /**
  * @author jilin
