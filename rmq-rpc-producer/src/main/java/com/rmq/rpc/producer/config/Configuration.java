@@ -1,6 +1,7 @@
 package com.rmq.rpc.producer.config;
 
 
+import com.fasterxml.jackson.databind.cfg.ConfigFeature;
 import com.rmq.rpc.common.annotations.RmqServer;
 import com.rmq.rpc.common.mq.Encoder;
 import com.rmq.rpc.common.mq.Parser;
@@ -13,6 +14,10 @@ import org.apache.commons.lang.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author jilin
@@ -33,7 +38,7 @@ public class Configuration {
     /**
      * 存储代理类和name的关系
      */
-    Map<Object,String> proxyForName = new HashMap<>();
+    Map<Class<?>,String> proxyForName = new HashMap<>();
     /**
      * 序列化工厂
      */
@@ -51,6 +56,25 @@ public class Configuration {
      * mq客户端
      */
     RmqClient rmqClient;
+    /**
+     * 线程池
+     */
+    ExecutorService threadPool;
+
+    
+    /**
+     * 无参构造方法
+     */
+    public Configuration() {
+        initThreadPool();
+    }
+
+    /**
+     * 初始化线程池
+     */
+    public void initThreadPool(){
+        threadPool = new ThreadPoolExecutor(rmqProducerConfig.getCoreSize(), rmqProducerConfig.getMaxSize(), rmqProducerConfig.getKeepAliveTime(), TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>(),null,null);
+    }
 
     /**
      * 获取代理类对应的serviceName
@@ -129,7 +153,7 @@ public class Configuration {
      */
     public<T> void addProxyBean(String name,ProxyBean<?> proxy){
         proxyBeans.put(name,proxy);
-        proxyForName.put(proxy.getBean(),name);
+        proxyForName.put(proxy.getClazz(),name);
     }
 
     public void setEncodeFactory(){
@@ -166,5 +190,12 @@ public class Configuration {
 
     public void setParser(Parser parser) {
         this.parser = parser;
+    }
+
+    public ExecutorService getThreadPool() {
+        return threadPool;
+    }
+    public void setThreadPool(ExecutorService threadPool) {
+        this.threadPool = threadPool;
     }
 }

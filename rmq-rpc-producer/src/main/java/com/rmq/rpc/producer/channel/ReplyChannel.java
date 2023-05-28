@@ -1,6 +1,15 @@
+/*
+ * @Author: jilin jilin_cq@163.com
+ * @Date: 2023-05-28 10:19:21
+ * @LastEditors: jilin jilin_cq@163.com
+ * @LastEditTime: 2023-05-28 16:02:05
+ * @FilePath: \rabbmitmq-rpc\rmq-rpc-producer\src\main\java\com\rmq\rpc\producer\channel\ReplyChannel.java
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+
 package com.rmq.rpc.producer.channel;
 
-import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.GetResponse;
 import com.rmq.rpc.producer.config.Configuration;
@@ -41,14 +50,14 @@ public class ReplyChannel {
     public String excuteRpc(String serviceName,String message){
 
         try {
-            new AMQP().
+            BasicProperties properties = new BasicProperties().builder().replyTo(replyQueue).build(); 
             channel.basicPublish(EXCHANGE_NAME, serviceName, properties, message.getBytes(StandardCharsets.UTF_8));
             GetResponse getResponse = null;
             while (getResponse == null) {
                 getResponse = channel.basicGet(properties.getReplyTo(), true);
             }
-            return new String(getResponse.getBody());
-        } catch (IOException | CloneNotSupportedException e) {
+            return new String(getResponse.getBody(),StandardCharsets.UTF_8);
+        } catch (IOException e) {
             throw new RmqException("send rpc mq error.",e);
         }
     }

@@ -33,8 +33,8 @@ public class ProxyFactory {
         Set<String> keySet = beans.keySet();
         for (String name : keySet) {
             Class<?> aClass = beans.get(name);
-            Object proxyInstance = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{aClass}, new ProxyHandler(configuration));
-            ProxyBean<?> proxyBean = new ProxyBean<>(name,proxyInstance);
+            Object proxyInstance =  Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{aClass}, new ProxyHandler(configuration));
+            ProxyBean<?> proxyBean = new ProxyBean<>(name,proxyInstance,aClass);
             configuration.addProxyBean(name,proxyBean);
             log.info("{}.class is register by proxy",aClass.getSimpleName());
         }

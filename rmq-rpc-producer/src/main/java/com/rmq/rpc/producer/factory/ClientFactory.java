@@ -43,10 +43,7 @@ public class ClientFactory {
         factory.setConnectionTimeout(configuration.getRmqConfig().getConnectionTimeOut());
         factory.setAutomaticRecoveryEnabled(true);
         factory.setVirtualHost(configuration.getRmqConfig().getvHost());
-        //创建一个新连接
-        Connection connection = factory.newConnection();
-        log.info("connection rabmitMQ is success");
         //返回自定义封装的客户端
-        return new RmqClient(configuration,connection);
+        return new RmqClient(configuration,factory);
     }
 }

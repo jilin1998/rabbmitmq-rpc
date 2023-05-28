@@ -53,6 +53,14 @@ public class RmqProducerConfig {
      */
     private String clusterName;
     /**
+     * 连接超时时间
+     */
+    private Integer connectionTimeOut = 60;
+    /**
+     * 虚拟主机
+     */
+    private String vHost = "/";
+    /**
      * 核心线程
      */
     private Integer coreSize=10;
@@ -61,13 +69,25 @@ public class RmqProducerConfig {
      */
     private Integer maxSize=100;
     /**
-     * 连接超时时间
+     * 线程存活时间
      */
-    private Integer connectionTimeOut = 60;
-    /**
-     * 虚拟主机
-     */
-    private String vHost = "/";
+    private Long keepAliveTime=60L;
+    
+    
+    
+    
+
+    public void setEncodeType(EncodeTypeEnum encodeType) {
+        this.encodeType = encodeType;
+    }
+
+    public Long getKeepAliveTime() {
+        return keepAliveTime;
+    }
+
+    public void setKeepAliveTime(Long keepAliveTime) {
+        this.keepAliveTime = keepAliveTime;
+    }
 
     public EncodeTypeEnum getEncodeType() {
         return encodeType;

@@ -1,3 +1,4 @@
+
 package com.rmq.rpc.producer.proxy;
 
 /**
@@ -14,11 +15,18 @@ public class ProxyBean<T> {
     private String name;
 
     private T bean;
+    /**
+     * 类模板
+     */
+    private Class clazz;
 
-    public ProxyBean(String name, T bean) {
+    public ProxyBean(String name, T bean,Class clazz) {
         this.name = name;
         this.bean = bean;
+        this.clazz = clazz;
     }
+
+    
 
     public String getName() {
         return name;
@@ -34,5 +42,17 @@ public class ProxyBean<T> {
 
     public void setBean(T bean) {
         this.bean = bean;
+    }
+
+
+
+    public Class<T> getClazz() {
+        return clazz;
+    }
+
+
+
+    public void setClazz(Class<T> clazz) {
+        this.clazz = clazz;
     }
 }
